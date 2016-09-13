@@ -3,7 +3,7 @@ using namespace std;
  
 #define icin(x) scanf("%d",&x)
 typedef long long LL;
-const int maxn=int(1e5)+10;
+const int maxn=int(5e5)+10;
  
 class SuffixArray{
 public:
@@ -65,20 +65,26 @@ public:
 			LCP[i] = PLCP[SA[i]];
 	}
 };
- 
+
+char A[maxn], B[maxn];
 int main(){
 	SuffixArray sa;
-	int t;
-	icin(t);
-	while(t--){
-		scanf("%s", sa.S);
-		sa.computeSA();
-		sa.computeLCP();
-		LL res=0;
-		for(int i=1;i<sa.n;i++){
-			res += LL(sa.n-1 - sa.SA[i] - sa.LCP[i]);
-		}
-		printf("%lld\n",res);
+	scanf("%s", A);
+	scanf("%s", B);
+	int n1 =(int)strlen(A), n2 = (int)strlen(B);
+	cout<<n1<<" "<<n2<<endl;
+	memcpy(sa.S, A, n1);
+	sa.S[n1]='#';
+	memcpy(sa.S+n1+1, B, n2); 
+	
+	sa.computeSA();
+	sa.computeLCP();
+	int res=-1;
+	for(int i=1;i<sa.n;i++){
+		int sa1 = sa.SA[i], sa2 = sa.SA[i-1];
+		if(min(sa1, sa2)<n1 && max(sa1, sa2)>n1 && sa.LCP[i]>res)
+			res = sa.LCP[i];
 	}
+	printf("%d\n",res);
 	return 0;
 } 
